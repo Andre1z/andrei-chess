@@ -1,4 +1,4 @@
-from chess_pieces import Pawn, Rook, Knight, Bishop
+from chess_pieces import Pawn, Rook, Knight, Bishop, Queen, King
 
 class ChessBoard:
     def __init__(self):
@@ -12,8 +12,11 @@ class ChessBoard:
             "n": Knight("black"),
             "B": Bishop("white"),
             "b": Bishop("black"),
+            "Q": Queen("white"),
+            "q": Queen("black"),
+            "K": King("white"),
+            "k": King("black"),
         }
-
 
     def create_initial_board(self):
         board = [
@@ -68,3 +71,4 @@ if __name__ == "__main__":
         chess_board.display_board()
     else:
         print("\nMovimiento no válido.")
+    
