@@ -1,6 +1,12 @@
+from chess_pieces import Pawn
+
 class ChessBoard:
     def __init__(self):
         self.board = self.create_initial_board()
+        self.pieces = {
+            "P": Pawn("white"),
+            "p": Pawn("black"),
+        }
 
     def create_initial_board(self):
         board = [
@@ -20,31 +26,38 @@ class ChessBoard:
             print(" ".join(row))
 
     def move_piece(self, start_pos, end_pos):
-        """
-        Mueve una pieza desde `start_pos` (tupla de coordenadas) a `end_pos`.
-
-        Parámetros:
-        start_pos: tupla (fila_inicio, columna_inicio)
-        end_pos: tupla (fila_fin, columna_fin)
-        """
         start_row, start_col = start_pos
         end_row, end_col = end_pos
 
-        # Verifica que la posición inicial no esté vacía
-        if self.board[start_row][start_col] == " ":
+        piece = self.board[start_row][start_col]
+        if piece == " ":
             print("No hay ninguna pieza en esa posición.")
             return False
 
-        # Realiza el movimiento
-        self.board[end_row][end_col] = self.board[start_row][start_col]
-        self.board[start_row][start_col] = " "
-        return True
+        if piece.upper() in self.pieces:
+            chess_piece = self.pieces[piece.upper()]
+            if chess_piece.is_valid_move(start_pos, end_pos, self.board):
+                self.board[end_row][end_col] = piece
+                self.board[start_row][start_col] = " "
+                return True
+            else:
+                print("Movimiento inválido para esta pieza.")
+                return False
+        else:
+            print("Esa pieza no tiene reglas implementadas todavía.")
+            return False
 
-# Código de prueba
+
+# Bloque principal para ejecutar el programa
 if __name__ == "__main__":
-    chess_board = ChessBoard()
-    chess_board.display_board()
+    print("Iniciando el tablero de ajedrez...\n")
+    chess_board = ChessBoard()  # Crea una instancia del tablero
+    chess_board.display_board()  # Muestra el tablero inicial en consola
 
-    print("\nMoviendo un peón...")
-    chess_board.move_piece((6, 4), (4, 4))  # Ejemplo: mueve el peón de la columna 'e' (fila 7 a fila 5)
-    chess_board.display_board()
+    print("\nIntentando mover un peón...")
+    success = chess_board.move_piece((6, 4), (4, 4))  # Ejemplo: mueve un peón blanco
+    if success:
+        print("\nTablero después del movimiento:")
+        chess_board.display_board()
+    else:
+        print("\nMovimiento no válido.")
