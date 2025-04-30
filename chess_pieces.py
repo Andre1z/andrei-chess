@@ -120,28 +120,38 @@ class Queen(ChessPiece):
         start_row, start_col = start_pos
         end_row, end_col = end_pos
 
-        # Combina las reglas del alfil y la torre
-        if start_row == end_row or start_col == end_col:  # Movimiento tipo torre
-            return self.is_path_clear(start_pos, end_pos, board)
-        elif abs(end_row - start_row) == abs(end_col - start_col):  # Movimiento tipo alfil
-            return self.is_path_clear(start_pos, end_pos, board)
+        # Movimiento tipo torre (horizontal/vertical)
+        if start_row == end_row or start_col == end_col:
+            if self.is_path_clear(start_pos, end_pos, board):
+                return True
+        
+        # Movimiento tipo alfil (diagonal)
+        elif abs(end_row - start_row) == abs(end_col - start_col):
+            if self.is_path_clear(start_pos, end_pos, board):
+                return True
+        
         return False
 
     def is_path_clear(self, start_pos, end_pos, board):
         start_row, start_col = start_pos
         end_row, end_col = end_pos
 
-        if start_row == end_row:  # Movimiento horizontal
+        # Movimiento horizontal
+        if start_row == end_row:
             step = 1 if start_col < end_col else -1
             for col in range(start_col + step, end_col, step):
                 if board[start_row][col] != " ":
                     return False
-        elif start_col == end_col:  # Movimiento vertical
+
+        # Movimiento vertical
+        elif start_col == end_col:
             step = 1 if start_row < end_row else -1
             for row in range(start_row + step, end_row, step):
                 if board[row][start_col] != " ":
                     return False
-        else:  # Movimiento diagonal
+
+        # Movimiento diagonal
+        else:
             step_row = 1 if end_row > start_row else -1
             step_col = 1 if end_col > start_col else -1
             for i in range(1, abs(end_row - start_row)):
@@ -149,7 +159,18 @@ class Queen(ChessPiece):
                 col = start_col + step_col * i
                 if board[row][col] != " ":
                     return False
-        return True
+
+        # Verificar la casilla final (si es una pieza enemiga, permite captura)
+        final_piece = board[end_row][end_col]
+        if final_piece != " " and (
+            (final_piece.islower() and self.color == "white") or
+            (final_piece.isupper() and self.color == "black")
+        ):
+            return True
+
+        # Casilla final vacía
+        return board[end_row][end_col] == " "
+
 
 class King(ChessPiece):
     def __init__(self, color):
