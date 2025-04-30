@@ -1,4 +1,4 @@
-from chess_pieces import Pawn
+from chess_pieces import Pawn, Rook, Knight, Bishop
 
 class ChessBoard:
     def __init__(self):
@@ -6,7 +6,14 @@ class ChessBoard:
         self.pieces = {
             "P": Pawn("white"),
             "p": Pawn("black"),
+            "R": Rook("white"),
+            "r": Rook("black"),
+            "N": Knight("white"),
+            "n": Knight("black"),
+            "B": Bishop("white"),
+            "b": Bishop("black"),
         }
+
 
     def create_initial_board(self):
         board = [

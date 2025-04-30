@@ -36,3 +36,78 @@ class Pawn(ChessPiece):
             if start_row + 2 == end_row and start_col == end_col and start_row == 1 and board[end_row][end_col] == " ":
                 return True  # Movimiento doble desde la posición inicial
         return False
+
+class Rook(ChessPiece):
+    def __init__(self, color):
+        super().__init__("Rook", color)
+
+    def is_valid_move(self, start_pos, end_pos, board):
+        start_row, start_col = start_pos
+        end_row, end_col = end_pos
+
+        # Movimiento en la misma fila o columna
+        if start_row == end_row or start_col == end_col:
+            # Verifica que no haya piezas bloqueando el camino
+            if self.is_path_clear(start_pos, end_pos, board):
+                return True
+        return False
+
+    def is_path_clear(self, start_pos, end_pos, board):
+        start_row, start_col = start_pos
+        end_row, end_col = end_pos
+
+        # Verifica el camino en línea recta
+        if start_row == end_row:  # Movimiento horizontal
+            step = 1 if start_col < end_col else -1
+            for col in range(start_col + step, end_col, step):
+                if board[start_row][col] != " ":
+                    return False
+        elif start_col == end_col:  # Movimiento vertical
+            step = 1 if start_row < end_row else -1
+            for row in range(start_row + step, end_row, step):
+                if board[row][start_col] != " ":
+                    return False
+        return True
+
+class Knight(ChessPiece):
+    def __init__(self, color):
+        super().__init__("Knight", color)
+
+    def is_valid_move(self, start_pos, end_pos, board):
+        start_row, start_col = start_pos
+        end_row, end_col = end_pos
+
+        # Movimiento en forma de "L"
+        row_diff = abs(end_row - start_row)
+        col_diff = abs(end_col - start_col)
+        if (row_diff == 2 and col_diff == 1) or (row_diff == 1 and col_diff == 2):
+            return True
+        return False
+
+class Bishop(ChessPiece):
+    def __init__(self, color):
+        super().__init__("Bishop", color)
+
+    def is_valid_move(self, start_pos, end_pos, board):
+        start_row, start_col = start_pos
+        end_row, end_col = end_pos
+
+        # Movimiento diagonal (la diferencia de filas debe ser igual a la diferencia de columnas)
+        if abs(end_row - start_row) == abs(end_col - start_col):
+            # Verifica que no haya piezas bloqueando el camino
+            if self.is_path_clear(start_pos, end_pos, board):
+                return True
+        return False
+
+    def is_path_clear(self, start_pos, end_pos, board):
+        start_row, start_col = start_pos
+        end_row, end_col = end_pos
+
+        step_row = 1 if end_row > start_row else -1
+        step_col = 1 if end_col > start_col else -1
+        for i in range(1, abs(end_row - start_row)):
+            row = start_row + step_row * i
+            col = start_col + step_col * i
+            if board[row][col] != " ":
+                return False
+        return True
